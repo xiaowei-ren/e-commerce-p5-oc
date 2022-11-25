@@ -1,13 +1,14 @@
 //Récupération des packages depuis le fichier json
 fetch("http://localhost:3000/api/products")
   .then(res => res.json())
-  .then(data => console.log(data))
+  .then(data => {
+    console.log(data)
+    data.forEach(product => addProduct(product))
+  })
   .catch(err => console.error(err));
 
-//Création des éléments dans le DOM
-document.body.onload = addElement;
 
-function addElement () {
+function addProduct (product) {
     //crée un nouvel élément a
     let a = document.createElement("a");
     a.href = "./product.html?id=42";
@@ -18,13 +19,13 @@ function addElement () {
 
     //crée des contenus d'élément article
     let img = document.createElement("img");
-    img.src = "http://localhost:3000/images/kanap01.jpeg";
-    img.alt = "Lorem ipsum dolor sit amet, Kanap name1";
+    img.src = product.imageUrl;
+    img.alt = product.altTxt;
     let h3 = document.createElement("h3");
-    let name = document.createTextNode("Kanap Sinopé");
+    let name = document.createTextNode(product.name);
     h3.appendChild(name);
     let p = document.createElement("p");
-    let description = document.createTextNode("Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum");
+    let description = document.createTextNode(product.description);
     p.appendChild(description);
     //ajoute les nœuds au élément article
     article.appendChild(img);
