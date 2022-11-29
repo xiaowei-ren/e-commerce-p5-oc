@@ -11,7 +11,7 @@ fetch("http://localhost:3000/api/products")
 function addProduct (product) {
     //crée un nouvel élément a
     let a = document.createElement("a");
-    a.href = "./product.html?id=42";
+    a.href = "./product.html?id=" + product._id;
     // et lui donne un élément article
     let article = document.createElement("article");
     //ajoute le nœud au élément a
@@ -36,5 +36,5 @@ function addProduct (product) {
     let section = document.getElementById("items");
     section.appendChild(a);
     a.appendChild(article);
-};
+}
 
