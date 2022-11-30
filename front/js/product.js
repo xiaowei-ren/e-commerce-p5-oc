@@ -1,3 +1,4 @@
+//Obtention des valeurs de chaîne (id)
 const urlSearchParams = new URLSearchParams(window.location.search);
 const params = Object.fromEntries(urlSearchParams.entries());
 let id = params.id;
