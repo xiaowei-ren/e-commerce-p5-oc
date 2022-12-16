@@ -88,7 +88,8 @@ function addCart (product) {
 
    // mis a jour de la quantite dans le localStorage
    input.addEventListener ("change", () => {
-     changeQuantity(product, parseInt(input.value))
+     changeQuantity(product, parseInt(input.value), parseInt(product.price / product.quantity) * parseInt(input.value))
+     location.reload();
    })
    
    
@@ -102,16 +103,18 @@ function addCart (product) {
    divSetting_delte.appendChild(deletP);
 
    deletP.addEventListener ("click", () => {
-     deleteItem(product)
+     deleteItem(product);
+     location.reload();
    })
 
 }
 
-function changeQuantity (product, quantity) {
+function changeQuantity (product, quantity, price) {
   let cart = JSON.parse(localStorage.getItem("cart"));
-  let foundProduct = cart.find(p => p._id == product._id);
+  let foundProduct = cart.find(p => p._id == product._id && p.color == product.color);
   if (foundProduct != undefined) {
     foundProduct.quantity = quantity;
+    foundProduct.price = price;
   }
   localStorage.setItem('cart', JSON.stringify(cart))
  }
