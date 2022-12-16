@@ -7,8 +7,7 @@ fetch("http://localhost:3000/api/products")
     console.log(data)
     let cart = JSON.parse(localStorage.getItem("cart"));
     for (i = 0; i < cart.length; i++) {
-      let cartProduct = cart[i]
-      let productDetail = data.find(p => p._id == cartProduct._id)
+      let productDetail = data.find(p => p._id == cart._id) 
         addCart(cart[i]);
     }
   })
@@ -57,9 +56,10 @@ function addCart (product) {
 
   // Insertion du prix
    let p2 = document.createElement("p");
-   p2.innerHTML = product.price + " €";//?
+   p2.innerHTML = product.price + " €";
    divDescription.appendChild(p1);
    divDescription.appendChild(p2);
+
 
   //crée de la cart settings <div class="cart__item__content__settings">
    let divSetting = document.createElement("div");
@@ -73,7 +73,7 @@ function addCart (product) {
    let divP = document.createElement("p");
    divP.innerHTML = "Qté : ";
     
-   // Insertion de la quantité  ?
+   // Insertion de la quantité  
    let input = document.createElement("input");
   
    
@@ -117,15 +117,34 @@ function changeQuantity (product, quantity) {
  }
 
 
+
 //supprime le produit et mis a jour les donnes dans le localStorage
 function deleteItem (product) {
   let cart = JSON.parse(localStorage.getItem("cart"));
-  cart = cart.filter(p => p._id != product._id && p.color != product.color);
+  cart = cart.filter(p => p._id != product._id || p.color != product.color);
   localStorage.setItem('cart', JSON.stringify(cart))
-
 }
 
+//Total article
+let totalQuantity = document.getElementById("totalQuantity");
+totalQuantity.innerHTML = totalNumber();
+function totalNumber () {
+  let cart = JSON.parse(localStorage.getItem("cart"));
+  let number = 0;
+  for (let product of cart) {
+    number += product.quantity
+  }
+  return number;
+}
 
-
-
-
+// Total prix
+let totalPrice = document.getElementById("totalPrice");
+totalPrice.innerHTML = totalPrix();
+function totalPrix() {
+  let cart = JSON.parse(localStorage.getItem("cart"));
+  let number = 0;
+  for (let product of cart) {
+    number += product.quantity * product.price
+  }
+  return number;
+}

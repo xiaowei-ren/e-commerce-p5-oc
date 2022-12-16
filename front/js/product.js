@@ -4,6 +4,8 @@ let params = Object.fromEntries(urlQueryParams.entries());
 let id = params.id;
 let productObject = {}
 
+//Récupérer des packages depuis le fichier json
+//Afficher les produits qu'on a choisis
 fetch("http://localhost:3000/api/products")
   .then(res => res.json())
   .then(data => {
@@ -17,7 +19,7 @@ fetch("http://localhost:3000/api/products")
   })
   .catch(error => console.log(error));
 
-  //Crée des éléments
+  //Créer des éléments
   let select = document.getElementById("colors");
   function addContent (content) {
     let imgContainer = document.querySelector(".item__img"); 
@@ -44,7 +46,8 @@ fetch("http://localhost:3000/api/products")
   bouton.addEventListener("click", () => {
 
     let cart = localStorage.getItem("cart") // Le panier
-    let quantityValue = parseInt(quantity.value); // La quantite choisie
+    let quantityValue = parseInt(quantity.value); // La quantite choisie 
+    let priceValue = parseInt(quantity.value) * parseInt (productObject.price); //Le prix
 
     if (select.value != '') {
       // On verifie que la quantite choisie est bien comprise entre 1 a 100
@@ -58,7 +61,7 @@ fetch("http://localhost:3000/api/products")
           "description": productObject.description,
           "imageUrl": productObject.imageUrl,
           "name": productObject.name,
-          "price": productObject.price,
+          "price": priceValue,
           "_id": id,
           "quantity": quantityValue,
         }
