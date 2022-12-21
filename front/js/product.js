@@ -47,7 +47,6 @@ fetch("http://localhost:3000/api/products")
 
     let cart = localStorage.getItem("cart") // Le panier
     let quantityValue = parseInt(quantity.value); // La quantite choisie 
-    let priceValue = parseInt(quantity.value) * parseInt (productObject.price); //Le prix
 
     if (select.value != '') {
       // On verifie que la quantite choisie est bien comprise entre 1 a 100
@@ -61,7 +60,7 @@ fetch("http://localhost:3000/api/products")
           "description": productObject.description,
           "imageUrl": productObject.imageUrl,
           "name": productObject.name,
-          "price": priceValue,
+          "price": productObject.price,
           "_id": id,
           "quantity": quantityValue,
         }

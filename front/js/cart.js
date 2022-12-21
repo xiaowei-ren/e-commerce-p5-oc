@@ -4,7 +4,6 @@
 fetch("http://localhost:3000/api/products")
   .then(res => res.json())
   .then(data => {
-    console.log(data)
     let cart = JSON.parse(localStorage.getItem("cart"));
     for (i = 0; i < cart.length; i++) {
       let productDetail = data.find(p => p._id == cart._id) 
@@ -88,7 +87,7 @@ function addCart (product) {
 
    // mis a jour de la quantite dans le localStorage
    input.addEventListener ("change", () => {
-     changeQuantity(product, parseInt(input.value), parseInt(product.price / product.quantity) * parseInt(input.value))
+     changeQuantity(product, parseInt(input.value))
      location.reload();
    })
    
@@ -109,12 +108,11 @@ function addCart (product) {
 
 }
 
-function changeQuantity (product, quantity, price) {
+function changeQuantity (product, quantity) {
   let cart = JSON.parse(localStorage.getItem("cart"));
   let foundProduct = cart.find(p => p._id == product._id && p.color == product.color);
   if (foundProduct != undefined) {
     foundProduct.quantity = quantity;
-    foundProduct.price = price;
   }
   localStorage.setItem('cart', JSON.stringify(cart))
  }
@@ -150,4 +148,148 @@ function totalPrix() {
     number += product.quantity * product.price
   }
   return number;
+}
+
+//Validation le formulaire
+
+const form = document.querySelector(".cart__order__form");
+const firstName = document.getElementById("firstName");
+const lastName = document.getElementById("lastName");
+const address = document.getElementById("address");
+const city = document.getElementById("city");
+const email = document.getElementById("email");
+const btnOrder =document.getElementById("order");
+
+
+form.addEventListener ('submit', (e) => {
+  e.preventDefault()
+  if (checkInput()) {
+
+    // on envoie les donnes
+    sendData()
+  } 
+})
+
+function checkInput () {
+  //Récupération des values depuis inputs
+  const firstNameValue = firstName.value.trim();
+  const lastNameValue = lastName.value.trim();
+  const addressValue = address.value.trim();
+  const cityValue = city.value.trim();
+  const emailValue = email.value.trim();
+
+  // verifier la value de prénom
+  if (firstNameValue === '') {
+    setErrorFor("Veuillez saisir un prénom.", "firstName")
+    return false;
+  } else if (!validName(firstNameValue)) {
+    setErrorFor("Le prénom est au mauvais format.", "firstName")
+    return false;
+  } else {
+    setSuccessFor("firstName");
+  }
+
+  // verifier la value de nom
+  if (lastNameValue === '') {
+    setErrorFor("Veuillez saisir un nom.", "lastName")
+    return false;
+  } else if (!validName(lastNameValue)) {
+    setErrorFor("Le nom est au mauvais format.", "lastName")
+    return false;
+  } else {
+    setSuccessFor('lastName');
+  }
+
+  // verifier la value d'address
+  if (addressValue === '') {
+    setErrorFor("Veuillez saisir une address.", "address")
+    return false;
+  } else if (!validAddress(addressValue)) {
+    setErrorFor("Merci de renseigner votre adresse d'au maximum 3 caractères", "address")
+    return false;
+  } else {
+    setSuccessFor('address');
+  }
+
+  // verifier la value de ville
+  if (cityValue === '') {
+    setErrorFor("Veuillez saisir une ville.", "city")
+    return false;
+  } else if (!validAddress(cityValue)) {
+    setErrorFor("Merci de renseigner votre ville d'au maximum 3 caractères", "city")
+    return false;
+  } else {
+    setSuccessFor('city');
+  }
+
+  // verifier la value d'email
+  if (emailValue === '') {
+    setErrorFor("Veuillez saisir un email.", "email")
+    return false;
+  } else if (!validEmail(emailValue)) {
+    setErrorFor("L'email est au mauvais format.", "email")
+    return false;
+  } else {
+    setSuccessFor('email');
+  }
+
+  return true;
+}
+
+function validName (name) {
+  const regex = /^\D+$/g;
+  let matches = name.match(regex);
+  if (matches == null) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+function setErrorFor (message, elementId) {
+  const input = document.getElementById(elementId);
+  const errorElement = document.getElementById(elementId + 'ErrorMsg');
+  errorElement.innerText = message;
+  input.style.background = "red"
+}
+
+function setSuccessFor (elementId) {
+  const input = document.getElementById(elementId);
+  const errorElement = document.getElementById(elementId + 'ErrorMsg');
+  errorElement.innerText = '';
+  input.style.background = "white"
+}
+
+function validAddress (address) {
+  const regex = /^[a-zA-Z0-9\s,.'-]{3,}$/;
+  let matches = address.match(regex);
+  if (matches == null) {
+    return false;
+  } else {
+    return true;
+  }
+
+}
+
+function validEmail (email) {
+  const regex = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/g;
+  let matches = email.match(regex);
+  if (matches == null) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+function sendData() {
+  let body = {
+    contact: {
+      firstName: firstNameValue,
+      lastName: lastNameValue,
+      address: addressValue,
+      city: cityValue,
+      email: emailValue,
+    },
+    product : {}
+  }
 }
