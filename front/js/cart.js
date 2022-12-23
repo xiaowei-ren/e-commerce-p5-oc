@@ -1,20 +1,21 @@
 
-//Récupération des packages depuis le fichier json
-//affiche les produits dans le panier
+//Affiche les produits dans le panier
+let productsIds = [];
 fetch("http://localhost:3000/api/products")
   .then(res => res.json())
   .then(data => {
     let cart = JSON.parse(localStorage.getItem("cart"));
     for (i = 0; i < cart.length; i++) {
-      let productDetail = data.find(p => p._id == cart._id) 
-        addCart(cart[i]);
+      let product = cart[i];
+      productsIds.push(product._id)
+      displayCartProduct(product);
     }
   })
   .catch(err => console.error(err));
 
   
 //Création des éléments
-function addCart (product) {
+function displayCartProduct (product) {
   //création un nouvel élément article
    let article = document.createElement("article");
    article.classList.add("cart__item");
@@ -164,13 +165,13 @@ const btnOrder =document.getElementById("order");
 form.addEventListener ('submit', (e) => {
   e.preventDefault()
   if (checkInput()) {
-
     // on envoie les donnes
     sendData()
   } 
 })
 
 function checkInput () {
+  
   //Récupération des values depuis inputs
   const firstNameValue = firstName.value.trim();
   const lastNameValue = lastName.value.trim();
@@ -281,15 +282,32 @@ function validEmail (email) {
   }
 }
 
+// Envoie de l'objet order vers le serveur
 function sendData() {
   let body = {
     contact: {
-      firstName: firstNameValue,
-      lastName: lastNameValue,
-      address: addressValue,
-      city: cityValue,
-      email: emailValue,
+      firstName: firstName.value.trim(),
+      lastName: lastName.value.trim(),
+      address: address.value.trim(),
+      city: city.value.trim(),
+      email: email.value.trim(),
     },
-    product : {}
+    products: productsIds
   }
+
+  fetch("http://localhost:3000/api/products/order", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+  .then(response => response.json())
+  .then(result => {
+    console.log('Sucess:', result);
+    window.location.href = "../html/confirmation.html?id="+result.orderId
+  })
+  .catch(error => {
+    console.error('Error:', error)
+  });
 }
