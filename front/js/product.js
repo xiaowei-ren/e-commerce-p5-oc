@@ -60,7 +60,6 @@ fetch("http://localhost:3000/api/products")
           "description": productObject.description,
           "imageUrl": productObject.imageUrl,
           "name": productObject.name,
-          "price": productObject.price,
           "_id": id,
           "quantity": quantityValue,
         }

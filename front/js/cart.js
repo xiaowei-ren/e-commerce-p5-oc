@@ -6,21 +6,27 @@ fetch("http://localhost:3000/api/products")
   .then(data => {
     let cart = JSON.parse(localStorage.getItem("cart"));
     for (i = 0; i < cart.length; i++) {
-      let product = cart[i];
-      productsIds.push(product._id)
-      displayCartProduct(product);
+      let cartProduct = cart[i];
+      let orignalProduct = data.find(item => item._id == cartProduct._id)
+      productsIds.push(cartProduct._id)
+      displayCartProduct(cartProduct, orignalProduct);
+
+      // Total prix
+      let totalPrice = document.getElementById("totalPrice");
+      totalPrice.innerHTML = totalPrix(data);
+
     }
   })
   .catch(err => console.error(err));
 
   
-//Création des éléments
-function displayCartProduct (product) {
-  //création un nouvel élément article
+//Afficher les produits dans le pannier
+function displayCartProduct (product, orignalProduct) {
+  //création de l'article
    let article = document.createElement("article");
    article.classList.add("cart__item");
-   article.dataset.id = "{product-ID}";  // ?
-   article.dataset.color = "{product-color}"; // ?
+   article.dataset.id = "{product-ID}";  
+   article.dataset.color = "{product-color}"; 
 
    let section = document.querySelector("#cart__items");
    section.appendChild(article);
@@ -40,7 +46,7 @@ function displayCartProduct (product) {
    divContent.classList.add("cart__item__content");
    article.appendChild(divContent);
 
-   //crée de la cart description <div class="cart__item__content__description">
+   //crée de la cart description
    let divDescription = document.createElement("div");
    divDescription.classList.add("cart__item__content__description");
    divContent.appendChild(divDescription);
@@ -56,12 +62,11 @@ function displayCartProduct (product) {
 
   // Insertion du prix
    let p2 = document.createElement("p");
-   p2.innerHTML = product.price + " €";
+   p2.innerHTML = orignalProduct.price + " €";
    divDescription.appendChild(p1);
    divDescription.appendChild(p2);
 
-
-  //crée de la cart settings <div class="cart__item__content__settings">
+  //crée de la cart settings
    let divSetting = document.createElement("div");
    divSetting.classList.add("cart__item__content__settings");
    divContent.appendChild(divSetting);
@@ -139,14 +144,12 @@ function totalNumber () {
   return number;
 }
 
-// Total prix
-let totalPrice = document.getElementById("totalPrice");
-totalPrice.innerHTML = totalPrix();
-function totalPrix() {
+function totalPrix(orignalProducts) {
   let cart = JSON.parse(localStorage.getItem("cart"));
   let number = 0;
   for (let product of cart) {
-    number += product.quantity * product.price
+    let orignalProduct = orignalProducts.find(item => item._id == product._id)
+    number += product.quantity * orignalProduct.price
   }
   return number;
 }
