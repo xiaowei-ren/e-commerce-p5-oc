@@ -86,6 +86,7 @@ fetch("http://localhost:3000/api/products")
           
         }
         console.log(JSON.parse(cart))
+        alert("Le produit a bien eté ajouté au panier")
         
       // Sinon, on affiche une alerte
       } else {
