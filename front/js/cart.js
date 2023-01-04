@@ -209,7 +209,7 @@ function checkInput () {
     setErrorFor("Veuillez saisir une address.", "address")
     return false;
   } else if (!validAddress(addressValue)) {
-    setErrorFor("Merci de renseigner votre adresse d'au maximum 3 caractères", "address")
+    setErrorFor("Merci de renseigner une adresse faisant au moins 3 caractères", "address")
     return false;
   } else {
     setSuccessFor('address');
@@ -220,7 +220,7 @@ function checkInput () {
     setErrorFor("Veuillez saisir une ville.", "city")
     return false;
   } else if (!validAddress(cityValue)) {
-    setErrorFor("Merci de renseigner votre ville d'au maximum 3 caractères", "city")
+    setErrorFor("Merci de renseigner une ville faisant au moins 3 caractères", "city")
     return false;
   } else {
     setSuccessFor('city');
@@ -307,7 +307,6 @@ function sendData() {
   })
   .then(response => response.json())
   .then(result => {
-    console.log('Sucess:', result);
     window.location.href = "../html/confirmation.html?id="+result.orderId
   })
   .catch(error => {

@@ -6,16 +6,11 @@ let productObject = {}
 
 //Récupérer des packages depuis le fichier json
 //Afficher les produits qu'on a choisis
-fetch("http://localhost:3000/api/products")
+fetch("http://localhost:3000/api/products/"+id)
   .then(res => res.json())
   .then(data => {
-    console.log(data)
-    data.forEach(content => {
-      if(content._id == id) {
-        productObject = content
-        addContent(content)
-      }
-    });
+    productObject = data
+    addContent(data)
   })
   .catch(error => console.log(error));
 
@@ -85,7 +80,6 @@ fetch("http://localhost:3000/api/products")
           localStorage.setItem("cart", JSON.stringify(cartData))
           
         }
-        console.log(JSON.parse(cart))
         alert("Le produit a bien eté ajouté au panier")
         
       // Sinon, on affiche une alerte
